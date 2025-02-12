@@ -132,6 +132,13 @@
             margin: 10px 0;
         }
 
+	.card h3 {
+	font-size: 16px; /* Ajusta el tamaño según lo necesites */
+	font-weight: bold; /* Opcional: para hacer el texto más grueso */
+	text-align: center; /* Opcional: Centra el texto */
+	color: #333; /* Opcional: Cambia el color si lo deseas */
+	}
+
         .lightbox {
             position: fixed;
             top: 0;
@@ -373,7 +380,7 @@
                 card.appendChild(info);
 
                 const valor = document.createElement('p');
-                valor.textContent = `Valor: ${item[4]}`;
+                valor.innerHTML = `<strong>Valor:</strong> ${item[4]}`;
                 card.appendChild(valor);
 
                 // Botón para agregar el artículo al carrito
