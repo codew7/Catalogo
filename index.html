@@ -377,12 +377,16 @@
 
                 if (isValidImageUrl(item[1])) {
                     const img = document.createElement('img');
-                    img.src = item[1];
-                    img.addEventListener('click', () => {
-                        document.getElementById('lightbox-img').src = item[1];
-                        window.location.hash = 'lightbox';
-                    });
-                    card.appendChild(img);
+					img.src = item[1];
+					img.onerror = function() {
+					this.src = 'no-disponible.png'; // Imagen de respaldo
+					};
+				img.addEventListener('click', () => {
+				document.getElementById('lightbox-img').src = img.src;
+				window.location.hash = 'lightbox';
+				});
+				card.appendChild(img);
+
                 }
 
                 const info = document.createElement('div');
