@@ -333,9 +333,10 @@
                 });
 
 		document.getElementById('novedades').addEventListener('click', () => {
-    		const novedades = [...productos].sort((a, b) => b[2] - a[2]); // Ordenar todos los productos
-    		cargarGrid(novedades); // Cargar todos los productos en la interfaz
-    		actualizarPaginacion(1, novedades); // Restablecer paginación a la primera página
+  		const novedades = [...productos].sort((a, b) => b[2] - a[2]); // Ordenar todos los productos
+
+    		actualizarPaginacion(1, novedades, ITEMS_PER_PAGE); // Actualizar la paginación con 50 artículos por página
+    		cargarGrid(novedades.slice(0, ITEMS_PER_PAGE)); // Mostrar solo los primeros 50 productos
 		});
 
                 document.getElementById('todos').addEventListener('click', () => {
