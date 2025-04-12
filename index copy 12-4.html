@@ -278,9 +278,7 @@
 
     <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
         <span class="close" onclick="closeLightbox(event)">x</span>
-        <button id="prev-btn" style="position: absolute; left: 20px; top: 50%; transform:translateY(-50%); font-size:2em; background:none; border:none; color:white; display:none;">&#10094;</button>
         <img id="lightbox-img" src="" alt="Imagen ampliada">
-        <button id="next-btn" style="position: absolute; right: 20px; top: 50%; transform:translateY(-50%); font-size:2em; background:none; border:none; color:white; display:none;">&#10095;</button>
     </div>
 
     <!-- Contenedor del carrito de compras -->
@@ -300,8 +298,6 @@
         let productos = [];
         let currentPage = 1;
         let carrito = [];
-        let currentLightboxImages = [];
-        let currentImageIndex = 0;
 
         fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGO}?key=${API_KEY}`)
             .then(response => {
@@ -384,22 +380,17 @@
                 card.appendChild(articulo);
 
                 if (isValidImageUrl(item[1])) {
-                    let imageUrls = [];
-                    if (item[1].indexOf(',') !== -1) {
-                        imageUrls = item[1].split(',').map(url => url.trim());
-                    } else {
-                        imageUrls.push(item[1]);
-                    }
-                    
                     const img = document.createElement('img');
-                    img.src = imageUrls[0];
-                    img.onerror = function() {
-                        this.src = 'no-disponible.png'; // Imagen de respaldo
-                    };
-                    img.addEventListener('click', () => {
-                        abrirLightbox(imageUrls);
-                    });
-                    card.appendChild(img);
+					img.src = item[1];
+					img.onerror = function() {
+					this.src = 'no-disponible.png'; // Imagen de respaldo
+					};
+				img.addEventListener('click', () => {
+				document.getElementById('lightbox-img').src = img.src;
+				window.location.hash = 'lightbox';
+				});
+				card.appendChild(img);
+
                 }
 
                 const info = document.createElement('div');
@@ -457,53 +448,9 @@
             return url && url.match(/\.(jpeg|jpg|gif|png)$/i);
         }
 
-        function abrirLightbox(images) {
-            currentLightboxImages = images;
-            currentImageIndex = 0;
-            document.getElementById('lightbox-img').src = currentLightboxImages[currentImageIndex];
-            document.getElementById('lightbox').style.display = 'flex';
-            actualizarBotonesLightbox();
-        }
-
-        function actualizarBotonesLightbox() {
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            if (currentLightboxImages.length > 1) {
-                prevBtn.style.display = 'block';
-                nextBtn.style.display = 'block';
-            } else {
-                prevBtn.style.display = 'none';
-                nextBtn.style.display = 'none';
-            }
-        }
-
-        document.getElementById('next-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (currentLightboxImages.length > 0) {
-                currentImageIndex = (currentImageIndex + 1) % currentLightboxImages.length;
-                document.getElementById('lightbox-img').src = currentLightboxImages[currentImageIndex];
-            }
-        });
-
-        document.getElementById('prev-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (currentLightboxImages.length > 0) {
-                currentImageIndex = (currentLightboxImages.length + currentImageIndex - 1) % currentLightboxImages.length;
-                document.getElementById('lightbox-img').src = currentLightboxImages[currentImageIndex];
-            }
-        });
-
-        document.getElementById('lightbox-img').addEventListener('error', function() {
-            // Si ocurre un error y no se trata de la primera imagen, mostramos la primera
-            if (currentLightboxImages.length > 0 && currentImageIndex !== 0) {
-                currentImageIndex = 0;
-                this.src = currentLightboxImages[0];
-            }
-        });
-
         function closeLightbox(event) {
             if (event.target === event.currentTarget || event.target.classList.contains('close')) {
-                document.getElementById('lightbox').style.display = 'none';
+                window.location.hash = '';
             }
         }
 
