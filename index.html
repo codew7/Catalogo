@@ -29,15 +29,15 @@
         header h1 {
         margin: 0;
         font-size: 14px;
-	font-style: italic; /* Pone el texto en cursiva */
-	margin-top: 13px; /* Espacio opcional con el logo */
+	    font-style: italic; /* Pone el texto en cursiva */
+	    margin-top: 13px; /* Espacio opcional con el logo */
         }
 		
-	header img {
-	max-width: 250px;
-	height: auto;
-	border-radius: 8px;
-	}
+        header img {
+        max-width: 250px;
+        height: auto;
+        border-radius: 8px;
+        }
 
         .controls {
             display: flex;
@@ -132,12 +132,12 @@
             margin: 10px 0;
         }
 
-	.card h3 {
-	font-size: 16px; /* Ajusta el tamaño según lo necesites */
-	font-weight: bold; /* Opcional: para hacer el texto más grueso */
-	text-align: center; /* Opcional: Centra el texto */
-	color: #333; /* Opcional: Cambia el color si lo deseas */
-	}
+        .card h3 {
+            font-size: 16px; /* Ajusta el tamaño según lo necesites */
+            font-weight: bold; /* Opcional: para hacer el texto más grueso */
+            text-align: center; /* Opcional: Centra el texto */
+            color: #333; /* Opcional: Cambia el color si lo deseas */
+        }
 
         .lightbox {
             position: fixed;
@@ -192,17 +192,17 @@
             border: 1px solid #ddd;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-	    min-width: 120px;
+	        min-width: 120px;
             max-width: 300px;
             z-index: 2000;
-	    display: none; /* Oculto */
+	        display: none; /* Oculto */
         }
 
         .cart-container h3 {
-	font-size: 22px; /* Cambia el tamaño del texto */
-	font-weight: bold; /* Opcional: Hace el texto más grueso */
-	text-align: center; /* Opcional: Centra el texto */
-        margin-top: 0;
+            font-size: 22px; /* Cambia el tamaño del texto */
+            font-weight: bold; /* Opcional: Hace el texto más grueso */
+            text-align: center; /* Opcional: Centra el texto */
+            margin-top: 0;
         }
 
         #cart-list {
@@ -240,18 +240,66 @@
 	
 <body>
 
-<header style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: #FFFFFF; width: 90%; margin: 0 auto;">
+<header style="display: flex; flex-direction: column; align-items: center; padding: 20px; background-color: #FFFFFF; width: 90%; margin: 0 auto; border-radius: 10px;">
     <img src="logo.png" alt="Logo de HomePoint" width="250" height="80">
-    <a href="https://api.whatsapp.com/send/?phone=5491154597288&text&type=phone_number&app_absent=0" target="_blank">
-        <img src="whatsapp.png" alt="WhatsApp" width="50" height="50">
+    <div style="text-align: center; font-size: 16px; font-style: italic; ">
+        Distribuidora Mayorista & Minorista
+    </div>
+    <a href="https://api.whatsapp.com/send/?phone=5491154597288&text&type=phone_number&app_absent=0" target="_blank" style="margin-top: 10px; position: relative;">
+        <img src="whatsapp.png" alt="WhatsApp" width="50" height="50" style="position: absolute; top: -100px; right: -200px;">
     </a>
 </header>
 
-<header style="text-align: left; padding: 10px 20px; background-color: #FFFFFF; width: 90%; margin: 0 auto;">
-    <h1 style="font-size: 14px; font-style: italic; margin: 0;">
-        Distribuidora mayoristas y minoristas en artículos personales y para el hogar, con calidad y variedad a tu alcance </p>
+<div id="carousel" style="position: relative; width: 100%; max-width: 90%; margin: 20px auto; overflow: hidden; height: 300px; border-radius: 10px;">
+    <div id="carousel-images" style="display: flex; transition: transform 0.5s ease-in-out; height: 100%; width: 100%;">
+        <div style="flex: 0 0 100%; height: 100%;">
+            <img src="image1.jpg" alt="Imagen 1" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div style="flex: 0 0 100%; height: 100%;">
+            <img src="image2.jpg" alt="Imagen 2" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div style="flex: 0 0 100%; height: 100%;">
+            <img src="image3.jpg" alt="Imagen 3" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div style="flex: 0 0 100%; height: 100%;">
+            <img src="image4.jpg" alt="Imagen 4" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div style="flex: 0 0 100%; height: 100%;">
+            <img src="image5.jpg" alt="Imagen 5" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div style="flex: 0 0 100%; height: 100%;">
+            <img src="image6.jpg" alt="Imagen 6" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+    </div>
+</div>
+
+<script>
+    const carouselImages = document.getElementById('carousel-images');
+    const images = document.querySelectorAll('#carousel-images img');
+    let currentIndex = 0;
+
+    function updateCarousel() {
+        const offset = -currentIndex * 100;
+        carouselImages.style.transform = `translateX(${offset}%)`;
+    }
+
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % images.length;
+        updateCarousel();
+    }, 5000); // Cambiar imagen cada 5 segundos
+</script>
+
+
+<header style="text-align: center; padding: 10px 20px; background-color: #FFFFFF; width: 90%; margin: 0 auto; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+    <h1 style="font-size: 16px; font-style: italic; margin: 0; text-align: center;">
+        Visita nuestro Showroom en Sargento Cabral 1945, Florida Oeste, Vicente López, Buenos Aires <a href="https://goo.gl/maps/2v7Z5x6g1jz" target="_blank" style="color: #4CAF50; text-decoration: none;">Ver en Maps</a> <br>
+        <span style="display: block; margin-top: 10px;"></span>
+        Contactate por Teléfono o WhatsApp al
+        <a href="https://api.whatsapp.com/send/?phone=5491154597288&text&type=phone_number&app_absent=0" target="_blank" style="color: #4CAF50; text-decoration: none;">+54 9 11 5459-7288</a> <br>
     </h1>
 </header>
+</header>
+
 
     <div class="controls">
         <div class="controls-row">
@@ -557,5 +605,8 @@ function actualizarCarrito() {
         }
     </script>
 
+<footer style="text-align: center; padding: 20px; background-color: #FFFFFF; width: 90%; margin: 20px auto; border-radius: 10px;">
+        <img src="logo.png" alt="Logo de HomePoint" width="200" style="display: block; margin: 0 auto;">
+    </footer>
 </body>
 </html>
