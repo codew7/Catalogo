@@ -33,12 +33,6 @@
 	    margin-top: 13px; /* Espacio opcional con el logo */
         }
 		
-        header img {
-        max-width: 250px;
-        height: auto;
-        border-radius: 8px;
-        }
-
         .controls {
             display: flex;
             flex-direction: column;
@@ -185,6 +179,7 @@
 
         .cart-container {
             position: fixed;
+            font-size: 14px;
             bottom: 20px;
             right: 20px;
             background: white;
@@ -192,14 +187,19 @@
             border: 1px solid #ddd;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-	        min-width: 120px;
+            min-width: 120px;
             max-width: 300px;
             z-index: 2000;
-	        display: none; /* Oculto */
+            display: none; /* Oculto */
+        }
+
+        #cart-list li {
+            list-style-type: disc; /* Agrega viñetas a cada ítem */
+            margin-left: 20px; /* Espaciado para las viñetas */
         }
 
         .cart-container h3 {
-            font-size: 22px; /* Cambia el tamaño del texto */
+            font-size: 0px; /* Cambia el tamaño del texto */
             font-weight: bold; /* Opcional: Hace el texto más grueso */
             text-align: center; /* Opcional: Centra el texto */
             margin-top: 0;
@@ -209,7 +209,7 @@
             list-style: none;
             padding: 0;
             margin: 0 0 10px 0;
-            max-height: 200px;
+            max-height: 100px;
             overflow-y: auto;
         }
 
@@ -241,14 +241,35 @@
 <body>
 
 <header style="display: flex; flex-direction: column; align-items: center; padding: 20px; background-color: #FFFFFF; width: 90%; margin: 0 auto; border-radius: 10px;">
-    <img src="logo.png" alt="Logo de HomePoint" width="250" height="80">
+    <img src="logo.png" alt="Logo de HomePoint" width="300" height=auto>
     <div style="text-align: center; font-size: 16px; font-style: italic; ">
         Distribuidora Mayorista & Minorista
     </div>
     <a href="https://api.whatsapp.com/send/?phone=5491154597288&text&type=phone_number&app_absent=0" target="_blank" style="margin-top: 10px; position: relative;">
-        <img src="whatsapp.png" alt="WhatsApp" width="50" height="50" style="position: absolute; top: -100px; right: -200px;">
+        <img src="whatsapp.png" alt="WhatsApp" width="50" height="50" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; cursor: pointer; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='scale(1)';">
     </a>
 </header>
+
+<div style="position: absolute; top: 280px; left: 50%; transform: translateX(-50%); color: white; padding: 10px 20px; border-radius: 5px; font-size: 70px; font-weight: bold; z-index: 1000; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); animation: heartbeat 1.5s infinite;">
+    BIENVENIDO
+</div>
+
+<style>
+    @keyframes heartbeat {
+        0% {
+            transform: translateX(-50%) scale(1);
+        }
+        30% {
+            transform: translateX(-50%) scale(1.1);
+        }
+        60% {
+            transform: translateX(-50%) scale(1);
+        }
+        100% {
+            transform: translateX(-50%) scale(1);
+        }
+    }
+</style>
 
 <div id="carousel" style="position: relative; width: 100%; max-width: 90%; margin: 20px auto; overflow: hidden; height: 300px; border-radius: 10px;">
     <div id="carousel-images" style="display: flex; transition: transform 0.5s ease-in-out; height: 100%; width: 100%;">
@@ -290,16 +311,26 @@
 </script>
 
 
-<header style="text-align: center; padding: 10px 20px; background-color: #FFFFFF; width: 90%; margin: 0 auto; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
-    <h1 style="font-size: 16px; font-style: italic; margin: 0; text-align: center;">
-        Visita nuestro Showroom en Sargento Cabral 1945, Florida Oeste, Vicente López, Buenos Aires <a href="https://goo.gl/maps/2v7Z5x6g1jz" target="_blank" style="color: #4CAF50; text-decoration: none;">Ver en Maps</a> <br>
-        <span style="display: block; margin-top: 10px;"></span>
-        Contactate por Teléfono o WhatsApp al
-        <a href="https://api.whatsapp.com/send/?phone=5491154597288&text&type=phone_number&app_absent=0" target="_blank" style="color: #4CAF50; text-decoration: none;">+54 9 11 5459-7288</a> <br>
-    </h1>
-</header>
+<header style="text-align: center; padding: 10px 20px; background-color: #FFFFFF; width: 85%; margin: 0 auto; border-radius: 10px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+    <div style="white-space: nowrap; animation: marquee 15s linear infinite;">
+        <h1 style="font-size: 16px; font-style: italic; margin: 0; text-align: center; display: inline-block; color: #4CAF50;">
+            Visita nuestro Showroom en Vicente López  -  ENVÍOS A TODO EL PAÍS <br>
+        </h1>
+    </div>
 </header>
 
+<style>
+    @keyframes marquee {
+        0% {
+            transform: translateX(-130%);
+        }
+        100% {
+            transform: translateX(130%);
+        }
+    }
+</style>
+
+</header>
 
     <div class="controls">
         <div class="controls-row">
@@ -310,7 +341,7 @@
         </div>
         <div class="controls-row">
             <input type="text" id="buscar" placeholder="Buscar artículo...">
-            <button id="todos">Todos</button>
+            <button id="todos">Mostrar Todos</button>
         </div>
     </div>
 
@@ -568,24 +599,24 @@
             actualizarCarrito();
         }
 
-function actualizarCarrito() {
-    const cartList = document.getElementById('cart-list');
-    const cartContainer = document.querySelector('.cart-container');
+        function actualizarCarrito() {
+            const cartList = document.getElementById('cart-list');
+            const cartContainer = document.querySelector('.cart-container');
 
-    cartList.innerHTML = '';
+            cartList.innerHTML = '';
 
-    if (carrito.length === 0) {
-        cartContainer.style.display = 'none'; // Ocultar carrito si está vacío
-    } else {
-        cartContainer.style.display = 'block'; // Mostrar carrito si tiene artículos
-    }
+            if (carrito.length === 0) {
+                cartContainer.style.display = 'none'; // Ocultar carrito si está vacío
+            } else {
+                cartContainer.style.display = 'block'; // Mostrar carrito si tiene artículos
+            }
 
-    carrito.forEach(item => {
-        let li = document.createElement('li');
-        li.textContent = `${item.nombre}`;
-        cartList.appendChild(li);
-    });
-}
+            carrito.forEach(item => {
+                let li = document.createElement('li');
+                li.textContent = `${item.nombre}`;
+                cartList.appendChild(li);
+            });
+        }
 
         function enviarPedido() {
             if (carrito.length === 0) {
@@ -605,8 +636,20 @@ function actualizarCarrito() {
         }
     </script>
 
-<footer style="text-align: center; padding: 20px; background-color: #FFFFFF; width: 90%; margin: 20px auto; border-radius: 10px;">
+    <footer style="text-align: center; padding: 20px; background-color: #FFFFFF; width: 90%; margin: 20px auto; border-radius: 10px;">
         <img src="logo.png" alt="Logo de HomePoint" width="200" style="display: block; margin: 0 auto;">
+        <h1 style="font-size: 14px; font-style: normal; margin: 0; text-align: center; font-weight: normal;"></h1>
+            <span style="display: block; margin-top: 10px;"></span>
+            Contacto
+            <a href="https://api.whatsapp.com/send/?phone=5491154597288&text&type=phone_number&app_absent=0" target="_blank" style="color: #4CAF50; text-decoration: none;">+54 9 11 5459-7288</a> <br>
+            <span style="display: block; margin-top: 5px;"></span>
+            Venta Mayorista
+            <a href="https://api.whatsapp.com/send/?phone=5491154597288&text&type=phone_number&app_absent=0" target="_blank" style="color: #4CAF50; text-decoration: none;">+54 9 11 2189-1006</a> <br>
+            <span style="display: block; margin-top: 10px;"></span>
+            Sargento Cabral 1945, Florida Oeste, Vicente López, Buenos Aires <br>
+            <span style="display: block; margin-top: 20px;"></span>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3286.805060845621!2d-58.51409442351304!3d-34.53316655377695!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb0d51d5740b3%3A0x2d2dfd9b7cad8e98!2sALI%2C%20Sgto.%20Cabral%201945%2C%20B1604%20Florida%20Oeste%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1744725791062!5m2!1ses!2sar" width="300" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </h1>
     </footer>
 </body>
 </html>
