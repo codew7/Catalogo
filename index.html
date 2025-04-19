@@ -387,11 +387,17 @@
             .then(data => {
                 const items = data.values;
                 if (!items || items.length === 0) throw new Error("No se encontraron datos en la hoja.");
-
-                productos = items;
+                
+                // Filtrar para ocultar artículos con etiqueta "No disponible"
+                // y ordenar descendente por el código (índice 2)
+                productos = items
+                    .filter(item => item[4].toLowerCase() !== 'no disponible')
+                    .sort((a, b) => parseInt(b[2]) - parseInt(a[2]));
+                
                 mostrarPagina(1);
 
-                const categoriasSet = new Set(items.map(item => item[0]));
+                // Usar la lista filtrada para obtener categorías
+                const categoriasSet = new Set(productos.map(item => item[0]));
                 const selectCategorias = document.getElementById('categorias');
                 categoriasSet.forEach(categoria => {
                     const option = document.createElement('option');
@@ -416,23 +422,20 @@
                     mostrarPagina(1, filtrados);
                 });
 
-		document.getElementById('novedades').addEventListener('click', () => {
-  		const novedades = [...productos].sort((a, b) => b[2] - a[2]); // Ordenar todos los productos
-
-    		actualizarPaginacion(1, novedades, ITEMS_PER_PAGE); // Actualizar la paginación con 50 artículos por página
-    		cargarGrid(novedades.slice(0, ITEMS_PER_PAGE)); // Mostrar solo los primeros 50 productos
-		});
+                document.getElementById('novedades').addEventListener('click', () => {
+                    const novedades = [...productos].sort((a, b) => parseInt(b[2]) - parseInt(a[2]));
+                    actualizarPaginacion(1, novedades);
+                    cargarGrid(novedades.slice(0, ITEMS_PER_PAGE));
+                });
 
                 document.getElementById('todos').addEventListener('click', () => {
                     mostrarPagina(1);
                 });
-		    
-            	})
-           	 .catch(error => {
+            })
+            .catch(error => {
                 console.error('Error al cargar los datos:', error);
                 document.querySelector('#error').textContent = error.message;
-            	});
-			
+            });
 
         function mostrarPagina(pagina, datos = productos) {
             currentPage = pagina;
