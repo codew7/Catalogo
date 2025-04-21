@@ -329,6 +329,10 @@
 
 </header>
 
+    <div id="loading-message" style="text-align: center; font-size: 18px; color: #4CAF50; font-weight: bold; margin-top: 20px;">
+        Cargando Catálogo, espere por favor...
+    </div>
+
     <div class="controls">
         <div class="controls-row">
             <select id="categorias">
@@ -354,14 +358,13 @@
 
     <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
         <span class="close" onclick="closeLightbox(event)">x</span>
-        <button id="prev-btn" style="position: absolute; left: 20px; top: 50%; transform:translateY(-50%); font-size:2em; background:none; border:none; color:white; display:none;">&#10094;</button>
+        <button id="prev-btn" style="position: absolute; left: 20px; top: 50%; transform:translateY(-50%); font-size:2em; background:none; border:none; color:rgb(138, 138, 138); display:none;">&#10094;</button>
         <img id="lightbox-img" src="" alt="Imagen ampliada">
-        <button id="next-btn" style="position: absolute; right: 20px; top: 50%; transform:translateY(-50%); font-size:2em; background:none; border:none; color:white; display:none;">&#10095;</button>
+        <button id="next-btn" style="position: absolute; right: 20px; top: 50%; transform:translateY(-50%); font-size:2em; background:none; border:none; color:rgb(138, 138, 138); display:none;">&#10095;</button>
     </div>
 
     <!-- Contenedor del carrito de compras -->
     <div class="cart-container">
-        <h3>🛒</h3>
         <ul id="cart-list"></ul>
 		<button onclick="enviarPedido()"><i class="fas fa-paper-plane"></i> Enviar</button>
 		<button onclick="limpiarCarrito()"><i class="fas fa-trash"></i> Limpiar</button>
@@ -379,12 +382,15 @@
         let currentLightboxImages = [];
         let currentImageIndex = 0;
 
+        const loadingMessage = document.getElementById('loading-message');
+
         fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGO}?key=${API_KEY}`)
             .then(response => {
                 if (!response.ok) throw new Error(`Error al acceder a la API: ${response.statusText}`);
                 return response.json();
             })
             .then(data => {
+                loadingMessage.style.display = 'none'; // Ocultar el mensaje de carga
                 const items = data.values;
                 if (!items || items.length === 0) throw new Error("No se encontraron datos en la hoja.");
                 
@@ -433,6 +439,7 @@
                 });
             })
             .catch(error => {
+                loadingMessage.style.display = 'none'; // Ocultar el mensaje de carga en caso de error
                 console.error('Error al cargar los datos:', error);
                 document.querySelector('#error').textContent = error.message;
             });
