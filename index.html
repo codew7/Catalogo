@@ -188,11 +188,31 @@
             justify-content: center;
             align-items: center;
             margin: 20px 0;
-            gap: 10px;
+            gap: 5px;
         }
 
-        .pagination span {
-            font-size: 16px;
+        .pagination-button {
+            width: 40px;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            background-color: #4CAF50;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: center; /* Centra el texto */
+        }
+
+        .pagination-button:hover {
+            background-color: #45a049;
+            color: white;
+        }
+
+        .pagination-button.active {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: default;
         }
 
         .cart-container {
@@ -520,20 +540,40 @@
 
             const totalPaginas = Math.ceil(datos.length / ITEMS_PER_PAGE);
 
-            const paginaInfo = document.createElement('span');
-            paginaInfo.textContent = `Página ${paginaActual} de ${totalPaginas}`;
-            pagination.appendChild(paginaInfo);
-
+            // Botón "Anterior"
             if (paginaActual > 1) {
                 const btnAnterior = document.createElement('button');
                 btnAnterior.textContent = 'Anterior';
+                btnAnterior.style.width = '100px'; // Define el ancho del botón
                 btnAnterior.addEventListener('click', () => mostrarPagina(paginaActual - 1, datos));
                 pagination.appendChild(btnAnterior);
             }
 
+            // Botones numerados
+            const MAX_VISIBLE_BUTTONS = 5; // Máximo de botones visibles
+            let startPage = Math.max(1, paginaActual - Math.floor(MAX_VISIBLE_BUTTONS / 2));
+            let endPage = Math.min(totalPaginas, startPage + MAX_VISIBLE_BUTTONS - 1);
+
+            if (endPage - startPage < MAX_VISIBLE_BUTTONS - 1) {
+                startPage = Math.max(1, endPage - MAX_VISIBLE_BUTTONS + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const btnPagina = document.createElement('button');
+                btnPagina.textContent = i;
+                btnPagina.classList.add('pagination-button');
+                if (i === paginaActual) {
+                    btnPagina.classList.add('active'); // Clase para el botón activo
+                }
+                btnPagina.addEventListener('click', () => mostrarPagina(i, datos));
+                pagination.appendChild(btnPagina);
+            }
+
+            // Botón "Siguiente"
             if (paginaActual < totalPaginas) {
                 const btnSiguiente = document.createElement('button');
                 btnSiguiente.textContent = 'Siguiente';
+                btnSiguiente.style.width = '100px'; // Define el ancho del botón
                 btnSiguiente.addEventListener('click', () => mostrarPagina(paginaActual + 1, datos));
                 pagination.appendChild(btnSiguiente);
             }
