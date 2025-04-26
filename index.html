@@ -379,9 +379,10 @@
 
     <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
         <span class="close" onclick="closeLightbox(event)">x</span>
-        <button id="prev-btn" style="position: absolute; left: 20px; top: 50%; transform:translateY(-50%); font-size:2em; background:none; border:none; color:rgb(138, 138, 138); display:none;">&#10094;</button>
+        <button id="prev-btn" style="position: absolute; left: 15px; top: 50%; transform:translateY(-70%); font-size:3em; background:none; border:none; color:#4CAF50; display:none;">&#10094;</button>
         <img id="lightbox-img" src="" alt="Imagen ampliada">
-        <button id="next-btn" style="position: absolute; right: 20px; top: 50%; transform:translateY(-50%); font-size:2em; background:none; border:none; color:rgb(138, 138, 138); display:none;">&#10095;</button>
+        <div id="lightbox-value" style="color: white; font-size: 1.5em; text-align: center; margin-top: 10px;"></div>
+        <button id="next-btn" style="position: absolute; right: 15px; top: 50%; transform:translateY(-70%); font-size:3em; background:none; border:none; color:#4CAF50; display:none;">&#10095;</button>
     </div>
 
     <!-- Contenedor del carrito de compras -->
@@ -392,7 +393,7 @@
     </div>
 
     <script>
-        const API_KEY = 'AIzaSyDwiZWDc66tv4usDIA-IreiJMLFuk0236Q';
+        const API_KEY = 'AIzaSyCLRUk_7BRg4TxtcrFYzsV7opqMlqeXD3s';
         const SPREADSHEET_ID = '1cD50d0-oSTogEe9tYo9ABUSP1ONCy3SAV92zsYYIG84';
         const RANGO = 'A2:E';
         const ITEMS_PER_PAGE = 30;
@@ -485,56 +486,113 @@
             grid.innerHTML = '';
 
             data.forEach(item => {
-                const card = document.createElement('div');
-                card.classList.add('card');
+            const card = document.createElement('div');
+            card.classList.add('card');
 
-                const articulo = document.createElement('h3');
-                articulo.textContent = item[3];
-                card.appendChild(articulo);
+            const articulo = document.createElement('h3');
+            articulo.textContent = item[3];
+            card.appendChild(articulo);
 
-                if (isValidImageUrl(item[1])) {
-                    let imageUrls = [];
-                    if (item[1].indexOf(',') !== -1) {
-                        imageUrls = item[1].split(',').map(url => url.trim());
-                    } else {
-                        imageUrls.push(item[1]);
+            if (isValidImageUrl(item[1])) {
+                let imageUrls = [];
+                if (item[1].indexOf(',') !== -1) {
+                imageUrls = item[1].split(',').map(url => url.trim());
+                } else {
+                imageUrls.push(item[1]);
+                }
+                
+                const img = document.createElement('img');
+                img.src = imageUrls[0];
+                img.onerror = function() {
+                this.src = 'no-disponible.png'; // Imagen de respaldo
+                };
+                img.addEventListener('click', () => {
+                abrirLightbox(imageUrls);
+                });
+                card.appendChild(img);
+            }
+
+            const info = document.createElement('div');
+            info.classList.add('info');
+            info.textContent = `${item[0]} | Código: ${item[2]}`;
+            card.appendChild(info);
+
+            const valor = document.createElement('p');
+            valor.innerHTML = `<strong>Valor:</strong> ${item[4]}`;
+            card.appendChild(valor);
+
+            // Contenedor para el selector de cantidad y el botón
+            const actionContainer = document.createElement('div');
+            actionContainer.style.display = 'flex';
+            actionContainer.style.alignItems = 'center';
+            actionContainer.style.justifyContent = 'center'; // Centrar horizontalmente
+            actionContainer.style.gap = '10px';
+
+            // Selector de cantidad
+            const cantidadSelector = document.createElement('input');
+            cantidadSelector.type = 'number';
+            cantidadSelector.min = '1';
+            cantidadSelector.value = ''; // Por defecto vacío
+            cantidadSelector.style.width = '35px';
+            cantidadSelector.style.height = '35px';
+            cantidadSelector.style.padding = '5px';
+            actionContainer.appendChild(cantidadSelector);
+
+            // Evento para actualizar la cantidad en el carrito al cambiar el selector
+            cantidadSelector.addEventListener('change', () => {
+                const nuevaCantidad = parseInt(cantidadSelector.value);
+                if (!isNaN(nuevaCantidad) && nuevaCantidad > 0) {
+                    const existe = carrito.find(item => item.nombre === articulo.textContent); // Usar el nombre del artículo
+                    if (existe) {
+                        existe.cantidad = nuevaCantidad; // Actualizar la cantidad en el carrito
+                        actualizarCarrito(); // Refrescar el carrito
                     }
-                    
-                    const img = document.createElement('img');
-                    img.src = imageUrls[0];
-                    img.onerror = function() {
-                        this.src = 'no-disponible.png'; // Imagen de respaldo
-                    };
-                    img.addEventListener('click', () => {
-                        abrirLightbox(imageUrls);
-                    });
-                    card.appendChild(img);
+                }
+            });
+
+            // Botón para agregar el artículo al carrito
+            const btnAgregar = document.createElement('button');
+            btnAgregar.innerHTML = '<i class="fas fa-cart-plus"></i>';
+            btnAgregar.style.padding = '10px 10px';  // Aumenta el espacio interno
+            btnAgregar.style.fontSize = '16px';     // Aumenta el tamaño del texto
+            btnAgregar.style.height = '50px';       // Ajusta la altura
+            btnAgregar.style.width = '50px';        // Ajusta el ancho
+            btnAgregar.addEventListener('click', () => {
+                let cantidad = parseInt(cantidadSelector.value);
+                if (isNaN(cantidad) || cantidad <= 0) {
+                    // Si el selector está vacío o tiene un valor inválido, lo establecemos en 1
+                    cantidad = 1;
+                    cantidadSelector.value = '1';
                 }
 
-                const info = document.createElement('div');
-                info.classList.add('info');
-                info.textContent = `${item[0]} | Código: ${item[2]}`;
-                card.appendChild(info);
+                const existe = carrito.find(item => item.nombre === articulo.textContent); // Usar el nombre del artículo
+                if (existe) {
+                    // Si el artículo ya existe, actualizamos la cantidad con el valor del selector
+                    existe.cantidad = cantidad;
+                } else {
+                    // Si no existe, lo agregamos al carrito
+                    agregarAlCarrito(articulo.textContent, item[4], cantidad);
+                }
 
-                const valor = document.createElement('p');
-                valor.innerHTML = `<strong>Valor:</strong> ${item[4]}`;
-                card.appendChild(valor);
-
-                // Botón para agregar el artículo al carrito
-				const btnAgregar = document.createElement('button');
-				btnAgregar.innerHTML = '<i class="fas fa-cart-plus"></i>';
-				btnAgregar.style.marginTop = '10px';
-				btnAgregar.style.padding = '10px 10px';  // Aumenta el espacio interno
-				btnAgregar.style.fontSize = '16px';     // Aumenta el tamaño del texto
-				btnAgregar.style.height = '50px';       // Ajusta la altura
-				btnAgregar.style.width = '50px';       // Ajusta el ancho
-				btnAgregar.addEventListener('click', () => {
-				agregarAlCarrito(item[3], item[4]);
-				});
-				card.appendChild(btnAgregar);
-
-                grid.appendChild(card);
+                actualizarCarrito(); // Refrescar el carrito
             });
+            actionContainer.appendChild(btnAgregar);
+
+            card.appendChild(actionContainer);
+            grid.appendChild(card);
+            });
+        }
+
+        function agregarAlCarrito(nombre, precio, cantidad) {
+            const existe = carrito.find(item => item.nombre === nombre);
+            if (existe) {
+                // Si el artículo ya existe, actualizamos la cantidad
+                existe.cantidad += cantidad;
+            } else {
+                // Si no existe, lo agregamos al carrito
+                carrito.push({ nombre, precio, cantidad });
+            }
+            actualizarCarrito();
         }
 
         function actualizarPaginacion(paginaActual, datos) {
@@ -639,13 +697,15 @@
         // Funciones del carrito de compras
 
         // Verifica que el mismo artículo no se agregue más de una vez
-        function agregarAlCarrito(nombre, precio) {
-            const existe = carrito.some(item => item.nombre === nombre);
+        function agregarAlCarrito(nombre, precio, cantidad) {
+            const existe = carrito.find(item => item.nombre === nombre);
             if (existe) {
-                alert('El artículo ya está en el carrito.');
-                return;
+                // Si el artículo ya existe, actualizamos la cantidad
+                existe.cantidad += cantidad;
+            } else {
+                // Si no existe, lo agregamos al carrito
+                carrito.push({ nombre, precio, cantidad });
             }
-            carrito.push({ nombre});
             actualizarCarrito();
         }
 
@@ -663,7 +723,7 @@
 
             carrito.forEach(item => {
                 let li = document.createElement('li');
-                li.textContent = `${item.nombre}`;
+                li.textContent = `${item.nombre} - Cantidad: ${item.cantidad}`;
                 cartList.appendChild(li);
             });
         }
@@ -685,6 +745,41 @@
             actualizarCarrito();
         }
     </script>
+
+    <script>
+    let startX = 0;
+    let endX = 0;
+
+    // Detectar el inicio del toque
+    document.getElementById('lightbox').addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+    });
+
+    // Detectar el movimiento del toque
+    document.getElementById('lightbox').addEventListener('touchmove', (e) => {
+        endX = e.touches[0].clientX;
+    });
+
+    // Detectar el final del toque y determinar la dirección
+    document.getElementById('lightbox').addEventListener('touchend', () => {
+        if (startX - endX > 50) {
+            // Deslizar hacia la izquierda (siguiente imagen)
+            if (currentLightboxImages.length > 0) {
+                currentImageIndex = (currentImageIndex + 1) % currentLightboxImages.length;
+                document.getElementById('lightbox-img').src = currentLightboxImages[currentImageIndex];
+            }
+        } else if (endX - startX > 50) {
+            // Deslizar hacia la derecha (imagen anterior)
+            if (currentLightboxImages.length > 0) {
+                currentImageIndex = (currentLightboxImages.length + currentImageIndex - 1) % currentLightboxImages.length;
+                document.getElementById('lightbox-img').src = currentLightboxImages[currentImageIndex];
+            }
+        }
+        // Reiniciar valores
+        startX = 0;
+        endX = 0;
+    });
+</script>
 
     <footer style="text-align: center; padding: 20px; background-color: #FFFFFF; width: 90%; margin: 20px auto; border-radius: 10px;">
         <img src="logo.png" alt="Logo de HomePoint" width="200" style="display: block; margin: 0 auto;">
