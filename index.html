@@ -746,41 +746,6 @@
         }
     </script>
 
-    <script>
-    let startX = 0;
-    let endX = 0;
-
-    // Detectar el inicio del toque
-    document.getElementById('lightbox').addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-    });
-
-    // Detectar el movimiento del toque
-    document.getElementById('lightbox').addEventListener('touchmove', (e) => {
-        endX = e.touches[0].clientX;
-    });
-
-    // Detectar el final del toque y determinar la dirección
-    document.getElementById('lightbox').addEventListener('touchend', () => {
-        if (startX - endX > 50) {
-            // Deslizar hacia la izquierda (siguiente imagen)
-            if (currentLightboxImages.length > 0) {
-                currentImageIndex = (currentImageIndex + 1) % currentLightboxImages.length;
-                document.getElementById('lightbox-img').src = currentLightboxImages[currentImageIndex];
-            }
-        } else if (endX - startX > 50) {
-            // Deslizar hacia la derecha (imagen anterior)
-            if (currentLightboxImages.length > 0) {
-                currentImageIndex = (currentLightboxImages.length + currentImageIndex - 1) % currentLightboxImages.length;
-                document.getElementById('lightbox-img').src = currentLightboxImages[currentImageIndex];
-            }
-        }
-        // Reiniciar valores
-        startX = 0;
-        endX = 0;
-    });
-</script>
-
     <footer style="text-align: center; padding: 20px; background-color: #FFFFFF; width: 90%; margin: 20px auto; border-radius: 10px;">
         <img src="logo.png" alt="Logo de HomePoint" width="200" style="display: block; margin: 0 auto;">
         <h1 style="font-size: 14px; font-style: normal; margin: 0; text-align: center; font-weight: normal;"></h1>
