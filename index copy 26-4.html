@@ -445,9 +445,7 @@
 
                 document.getElementById('buscar').addEventListener('input', (e) => {
                     const query = e.target.value.toLowerCase();
-                    const filtrados = productos.filter(item => 
-                        item[3].toLowerCase().includes(query) || item[2].toLowerCase().includes(query)
-                    );
+                    const filtrados = productos.filter(item => item[3].toLowerCase().includes(query));
                     mostrarPagina(1, filtrados);
                 });
 
