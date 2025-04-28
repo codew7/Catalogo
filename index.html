@@ -735,7 +735,7 @@
             }
             let mensaje = "Hola, me interesan estos artículos:%0A";
             carrito.forEach(item => {
-                mensaje += `- ${item.nombre}%0A`;
+                mensaje += `- ${item.nombre} - Cantidad: ${item.cantidad}%0A`;
             });
             window.open(`https://api.whatsapp.com/send/?phone=5491154597288&text=${mensaje}&type=phone_number&app_absent=0`);
         }
