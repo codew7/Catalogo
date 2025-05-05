@@ -8,6 +8,16 @@
 	
     <title>Catálogo HomePoint</title>
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N8G59PZ6N4"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-N8G59PZ6N4');
+    </script>
+
     <!-- Meta Pixel Code -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -48,8 +58,8 @@
         header h1 {
         margin: 0;
         font-size: 14px;
-	    font-style: italic; /* Pone el texto en cursiva */
-	    margin-top: 13px; /* Espacio opcional con el logo */
+	    font-style: italic;
+	    margin-top: 13px;
         }
 		
         .controls {
@@ -266,16 +276,6 @@
 		
     </style>
 </head>
-
-	<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-N8G59PZ6N4"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-N8G59PZ6N4');
-</script>
 	
 <body>
 
@@ -285,6 +285,7 @@
         Distribuidora Mayorista & Minorista
     </div>
     <a href="https://api.whatsapp.com/send/?phone=5491154597288&text&type=phone_number&app_absent=0" target="_blank" style="margin-top: 10px; position: relative;">
+    <!--- <a href="https://api.whatsapp.com/send/?phone=5491121891006&text&type=phone_number&app_absent=0" target="_blank" style="margin-top: 10px; position: relative;"> -->
         <img src="whatsapp.png" alt="WhatsApp" width="50" height="50" style="position: fixed; bottom: 30px; right: 20px; z-index: 1000; cursor: pointer; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='scale(1)';">
     </a>
 </header>
@@ -333,6 +334,7 @@
     <div style="white-space: nowrap; animation: marquee 15s linear infinite;">
         <h1 style="font-size: 16px; font-style: italic; margin: 0; text-align: center; display: inline-block; color: #4CAF50;">
             🏪&nbsp; Visita nuestro Showroom en Vicente López &nbsp;🛍️ &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;  🚚&nbsp; ENVÍOS A TODO EL PAÍS &nbsp;📦 <br>
+        <!--   💲&nbsp; Valores publicados en dólares o cotización al Blue del día &nbsp;💲 <br> -->
         </h1>
     </div>
 </header>
@@ -370,11 +372,11 @@
     <p id="error" style="text-align: center; color: red; font-weight: bold;"></p>
 
     <div class="grid" id="catalogo">
-        <!-- Los datos se cargarán aquí -->
+        
     </div>
 
     <div class="pagination" id="pagination">
-        <!-- Controles de paginación -->
+        
     </div>
 
     <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
@@ -412,19 +414,18 @@
                 return response.json();
             })
             .then(data => {
-                loadingMessage.style.display = 'none'; // Ocultar el mensaje de carga
+                loadingMessage.style.display = 'none';
                 const items = data.values;
                 if (!items || items.length === 0) throw new Error("No se encontraron datos en la hoja.");
                 
                 // Filtrar para ocultar artículos con etiqueta "No disponible"
                 // y ordenar descendente por el código (índice 2)
                 productos = items
-                    .filter(item => item[4].toLowerCase() !== 'no disponible')
+                    .filter(item => item[4].toLowerCase() !== 'no disponible') // NO MODIFICAR POR 5
                     .sort((a, b) => parseInt(b[2]) - parseInt(a[2]));
                 
                 mostrarPagina(1);
 
-                // Usar la lista filtrada para obtener categorías
                 const categoriasSet = new Set(productos.map(item => item[0]));
                 const selectCategorias = document.getElementById('categorias');
                 categoriasSet.forEach(categoria => {
@@ -519,6 +520,7 @@
 
             const valor = document.createElement('p');
             valor.innerHTML = `<strong>Valor:</strong> ${item[4]}`;
+            // valor.innerHTML = `<strong>Valor USD:</strong> ${item[5]}`;
             card.appendChild(valor);
 
             // Contenedor para el selector de cantidad y el botón
@@ -574,7 +576,7 @@
                     agregarAlCarrito(articulo.textContent, item[4], cantidad);
                 }
 
-                actualizarCarrito(); // Refrescar el carrito
+                actualizarCarrito();
             });
             actionContainer.appendChild(btnAgregar);
 
@@ -605,7 +607,7 @@
             if (paginaActual > 1) {
                 const btnAnterior = document.createElement('button');
                 btnAnterior.textContent = 'Anterior';
-                btnAnterior.style.width = '100px'; // Define el ancho del botón
+                btnAnterior.style.width = '100px';
                 btnAnterior.addEventListener('click', () => mostrarPagina(paginaActual - 1, datos));
                 pagination.appendChild(btnAnterior);
             }
@@ -624,7 +626,7 @@
                 btnPagina.textContent = i;
                 btnPagina.classList.add('pagination-button');
                 if (i === paginaActual) {
-                    btnPagina.classList.add('active'); // Clase para el botón activo
+                    btnPagina.classList.add('active');
                 }
                 btnPagina.addEventListener('click', () => mostrarPagina(i, datos));
                 pagination.appendChild(btnPagina);
@@ -634,7 +636,7 @@
             if (paginaActual < totalPaginas) {
                 const btnSiguiente = document.createElement('button');
                 btnSiguiente.textContent = 'Siguiente';
-                btnSiguiente.style.width = '100px'; // Define el ancho del botón
+                btnSiguiente.style.width = '100px';
                 btnSiguiente.addEventListener('click', () => mostrarPagina(paginaActual + 1, datos));
                 pagination.appendChild(btnSiguiente);
             }
@@ -738,6 +740,7 @@
                 mensaje += `- ${item.nombre} - Cantidad: ${item.cantidad}%0A`;
             });
             window.open(`https://api.whatsapp.com/send/?phone=5491154597288&text=${mensaje}&type=phone_number&app_absent=0`);
+            //window.open(`https://api.whatsapp.com/send/?phone=5491121891006&text=${mensaje}&type=phone_number&app_absent=0`);
         }
         
         function limpiarCarrito() {
